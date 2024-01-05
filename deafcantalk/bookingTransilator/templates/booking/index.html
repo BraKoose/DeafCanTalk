@@ -1,0 +1,121 @@
+<!-- bookingTransilator/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeafCanTalk Content</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #2ecc71;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+
+        main {
+            margin: 20px;
+        }
+
+        h1 {
+            color: #2ecc71;
+        }
+
+        h2 {
+            color: #2ecc71;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .booking-button {
+            background-color: #2ecc71;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .booking-form {
+            display: none;
+            background-color: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .thank-you-message {
+            color: #2ecc71;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>DeafCanTalk Video Content</h1>
+    </header>
+
+    <main>
+        <!-- Display existing video content -->
+        {% if video_contents %}
+            <h2>Existing Videos</h2>
+            <ul>
+                {% for video in video_contents %}
+                    <li>
+                        <strong>{{ video.video_name }}</strong>
+                        <p>{{ video.video_description }}</p>
+                        {% if video.video_file %}
+                            <video width="320" height="240" controls>
+                                <source src="{{ video.video_file.url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        {% elif video.youtube_link %}
+                            <iframe width="320" height="240" src="{{ video.youtube_link }}" frameborder="0" allowfullscreen></iframe>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No videos available.</p>
+        {% endif %}
+
+        <!-- Booking button and form -->
+        <a href="#" class="booking-button" onclick="showBookingForm()">Book a Translator</a>
+        <div id="booking-form" class="booking-form">
+            <form method="post" action="{% url 'bookingTransilator:book_translator' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Submit</button>
+            </form>
+            <div id="thank-you-message" class="thank-you-message"></div>
+        </div>
+    </main>
+
+    <script>
+        function showBookingForm() {
+            var bookingForm = document.getElementById('booking-form');
+            bookingForm.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
